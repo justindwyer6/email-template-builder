@@ -15,10 +15,10 @@ const App: React.FC = () => {
     // <div className="h-full">
     <div className="relative h-screen overflow-y-scroll">
       <div className="sticky top-0 z-10 w-full bg-indigo-500">
-        <ModuleSelect handleChange={handleSetActiveModules}></ModuleSelect>
+        <ModuleSelect handleChange={handleSetActiveModules} />
       </div>
       {activeModules.map((module: HtmlModule, i: number) => {
-        return <EmailModule key={i} module={module}></EmailModule>;
+        return <EmailModule key={i} module={module} />;
       })}
     </div>
     // </div>
