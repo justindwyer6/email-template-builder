@@ -41,7 +41,7 @@ const EmailModule: React.FC<EmailModuleProps> = ({
         }}
       >
         <h2>{moduleData.name}</h2>
-        <div className="flex flex-wrap">
+        <div>
           {Object.keys(moduleData).map((key, i) => {
             const typedKey = key as keyof AnyModuleProperties;
             const property = moduleData[typedKey];

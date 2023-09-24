@@ -56,27 +56,27 @@ export class ImageModule implements HtmlModule<ImageModuleProperties> {
       flattenValues(imageModuleProperties);
 
     return `
-    <tr>
-        <td align="${alignment}">
-            <a
-                style="text-decoration: none;"
-                href="${link}"
-            >
-                <img
-                    src="${imageSrc}"
-                    width="${width}"
-                    style="vertical-align: ${verticalAlign}; max-width: ${width}px; width: 100%;"
-                    alt="${altText}"
-                />${
-                  devMode
-                    ? altText
-                      ? `<p>${altText}</p>`
-                      : `<p style="color: red">Error: Missing alt text</p>`
-                    : ''
-                }
-            </a>
-        </td>
-    </tr>
+<tr>
+  <td align="${alignment}">
+    <a
+      style="text-decoration: none;"
+      href="${link}"
+    >
+      <img
+        src="${imageSrc}"
+        width="${width}"
+        style="vertical-align: ${verticalAlign}; max-width: ${width}px; width: 100%;"
+        alt="${altText}"
+      />${
+        devMode
+          ? altText
+            ? `<p>${altText}</p>`
+            : `<p style="color: red">Error: Missing alt text</p>`
+          : ''
+      }
+    </a>
+  </td>
+</tr>
     `;
   }
 }

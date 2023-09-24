@@ -31,7 +31,15 @@ export interface ImageModuleProperties extends HtmlModuleProperties {
   altText: PropertyData<string>;
 }
 
-export type AnyModuleProperties = HtmlModuleProperties & ImageModuleProperties;
+export interface TextModuleProperties extends HtmlModuleProperties {
+  textContent: PropertyData<string>;
+  textColor: PropertyData<string>;
+  fontShorthand: PropertyData<string>;
+}
+
+export type AnyModuleProperties = (HtmlModuleProperties &
+  ImageModuleProperties) &
+  (HtmlModuleProperties & TextModuleProperties);
 
 export interface HtmlModule<T = AnyModuleProperties> {
   template: (HtmlModuleProperties: T, devMode: boolean) => string;
