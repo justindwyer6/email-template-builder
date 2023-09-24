@@ -37,9 +37,11 @@ export interface TextModuleProperties extends HtmlModuleProperties {
   fontShorthand: PropertyData<string>;
 }
 
-export type AnyModuleProperties = (HtmlModuleProperties &
-  ImageModuleProperties) &
-  (HtmlModuleProperties & TextModuleProperties);
+export type AnyModuleProperties = HtmlModuleProperties &
+  Partial<
+    Omit<ImageModuleProperties, keyof HtmlModuleProperties> &
+      Omit<TextModuleProperties, keyof HtmlModuleProperties>
+  >;
 
 export interface HtmlModule<T = AnyModuleProperties> {
   template: (HtmlModuleProperties: T, devMode: boolean) => string;
@@ -47,7 +49,7 @@ export interface HtmlModule<T = AnyModuleProperties> {
 }
 
 export interface ModulesDictionary {
-  [image: string]: HtmlModule<AnyModuleProperties>;
+  [key: string]: HtmlModule<any> & { data: HtmlModuleProperties };
 }
 
 //   aStyle: string;
