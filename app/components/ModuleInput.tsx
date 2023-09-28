@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { TextField, Box } from '@mui/material';
+import { TextField, Box, Button } from '@mui/material';
 import { AnyModuleProperties } from '../types';
 
 type ModuleInputProps = {
@@ -53,7 +53,7 @@ const ModuleInput: React.FC<ModuleInputProps> = ({
   };
 
   return (
-    <Box sx={{ mb: 2 }}>
+    <Box sx={{ mb: 2, display: 'flex', flexDirection: 'row' }}>
       <TextField
         label={label}
         type="text"
@@ -66,6 +66,17 @@ const ModuleInput: React.FC<ModuleInputProps> = ({
         inputRef={inputRef}
         // onKeyDown={handleKeyDown}
       />
+
+      {/* TODO: Abstract the onClick */}
+      <Button
+        onClick={async () => {
+          const value = await navigator.clipboard.readText();
+          console.dir(value);
+          handleChange(value);
+        }}
+      >
+        Paste
+      </Button>
     </Box>
   );
 };

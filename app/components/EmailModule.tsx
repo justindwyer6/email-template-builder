@@ -4,6 +4,7 @@ import { HtmlModule, isPropertyData } from '../types';
 import { cloneDeep } from 'lodash';
 import ModuleInput from './ModuleInput';
 import { AnyModuleProperties } from '../types';
+import { Button } from '@mui/material';
 
 // TODO: Build a toggle for this
 const devMode = true;
@@ -24,7 +25,7 @@ const EmailModule: React.FC<EmailModuleProps> = ({
     const newModuleData = cloneDeep(moduleData);
     const newProperty = newModuleData[propertyKey];
 
-    if (typeof newProperty === 'string') return;
+    if (typeof newProperty !== 'object') return;
 
     newProperty.value = value;
     setModuleData(newModuleData);
@@ -60,6 +61,15 @@ const EmailModule: React.FC<EmailModuleProps> = ({
               />
             );
           })}
+
+          {/* TODO: Abstract onClick and Add feedback */}
+          <Button
+            onClick={() =>
+              navigator.clipboard.writeText(template(moduleData, false))
+            }
+          >
+            Copy Module HTML
+          </Button>
         </div>
         <pre>{template(moduleData, false)}</pre>
       </div>

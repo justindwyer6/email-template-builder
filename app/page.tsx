@@ -6,6 +6,7 @@ import EmailModule from './components/EmailModule';
 import ModuleSelect from './components/ModuleSelect';
 import { HtmlModule } from './types';
 import Box from '@mui/material/Box';
+import { Button } from '@mui/material';
 
 const App: React.FC = () => {
   const [activeModules, setActiveModules] = useState<HtmlModule[]>([]);
@@ -13,6 +14,8 @@ const App: React.FC = () => {
   const handleSetActiveModules = (newModule: HtmlModule) => {
     setActiveModules([...activeModules, newModule]);
   };
+
+  console.dir(activeModules);
 
   return (
     <div>
@@ -22,6 +25,19 @@ const App: React.FC = () => {
         </Toolbar>
       </AppBar>
       <Box mt={14}>
+        {/* TODO: Abstract onClick and Add feedback; Use the state that's already in the children */}
+        <Button
+          onClick={() => {
+            navigator.clipboard.writeText(
+              activeModules.reduce((acc: string, module: HtmlModule) => {
+                return `${acc}${module.template(module.data, false)}`;
+              }, '')
+            );
+          }}
+        >
+          Copy Full HTML
+        </Button>
+
         {activeModules.map((module: HtmlModule, i: number) => {
           return <EmailModule key={i} module={module} />;
         })}
