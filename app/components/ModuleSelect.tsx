@@ -1,24 +1,14 @@
 import React, { useState } from 'react';
-import {
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
-  SelectChangeEvent,
-} from '@mui/material';
+import { Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 import { modules } from '../modules';
 import { HtmlModule } from '../types';
 
 interface ModuleSelectProps {
-  handleChange: (module: HtmlModule) => void;
+  handleSelect: (module: HtmlModule) => void;
 }
 
-const ModuleSelect: React.FC<ModuleSelectProps> = ({ handleChange }) => {
-  const [selectedOption, setSelectedOption] = useState<string>('');
-
-  const handleSelect = (event: SelectChangeEvent<string>) => {
-    handleChange(modules[event.target.value]);
-  };
+const ModuleSelect: React.FC<ModuleSelectProps> = ({ handleSelect }) => {
+  const [selectedOption, _] = useState<string>('');
 
   return (
     <FormControl variant="outlined" fullWidth>
@@ -27,7 +17,7 @@ const ModuleSelect: React.FC<ModuleSelectProps> = ({ handleChange }) => {
         labelId="dropdown-label"
         id="dropdown"
         value={selectedOption}
-        onChange={handleSelect}
+        onChange={(e) => handleSelect(modules[e.target.value])}
         label="Add a module"
       >
         <MenuItem value="" disabled>
@@ -35,8 +25,8 @@ const ModuleSelect: React.FC<ModuleSelectProps> = ({ handleChange }) => {
         </MenuItem>
 
         {Object.keys(modules).map((key) => (
-          <MenuItem key={modules[key].data.name} value={key}>
-            {modules[key].data.name}
+          <MenuItem key={modules[key].name} value={key}>
+            {modules[key].name}
           </MenuItem>
         ))}
       </Select>

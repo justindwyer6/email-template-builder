@@ -1,58 +1,68 @@
-import { HtmlModule, TextModuleProperties } from '../types';
-import { flattenValues } from '../utils';
+import { HtmlModule, TextModuleMetadata, TextModuleProperties } from '../types';
 
 export class TextModule implements HtmlModule<TextModuleProperties> {
-  private static defaultProperties: TextModuleProperties = {
-    name: 'Text',
+  private static initialProperties: TextModuleProperties = {
+    link: '',
+    textContent: '',
+    textColor: '',
+    fontShorthand: '',
+    alignment: 'center',
+    verticalAlignment: 'top',
+    width: '640',
+  };
+
+  public metadata: TextModuleMetadata = {
     link: {
-      value: '',
       label: 'Link',
       details: '',
       documentationUrl: '',
+      type: 'content',
     },
     textContent: {
-      value: '',
       label: 'Text',
       details: '',
       documentationUrl: '',
+      type: 'content',
     },
     textColor: {
-      value: '',
       label: 'Text Color',
       details: '',
       documentationUrl: '',
+      type: 'style',
     },
     fontShorthand: {
-      value: '',
       label: 'Font',
       details: '',
       documentationUrl: '',
+      type: 'style',
     },
     alignment: {
-      value: 'center',
       label: 'Alignment',
       details: '',
       documentationUrl: '',
+      type: 'style',
     },
-    verticalAlign: {
-      value: 'top',
+    verticalAlignment: {
       label: 'Vertical Alignment',
       details: '',
       documentationUrl: '',
+      type: 'style',
     },
     width: {
-      value: '640',
       label: 'Width',
       details: '',
       documentationUrl: '',
+      type: 'style',
     },
   };
 
   public data: TextModuleProperties;
 
   constructor(data?: Partial<TextModuleProperties>) {
-    this.data = { ...TextModule.defaultProperties, ...data };
+    this.data = { ...TextModule.initialProperties, ...data };
   }
+
+  public name: string = 'Text';
 
   template(
     textModuleProperties: TextModuleProperties,
@@ -65,20 +75,26 @@ export class TextModule implements HtmlModule<TextModuleProperties> {
       textColor,
       fontShorthand,
       width,
-      verticalAlign,
-    } = flattenValues(textModuleProperties);
+      verticalAlignment,
+    } = textModuleProperties;
 
     return `
 <tr>
-  <td style="padding: 48px 64px 32px;">
+  <td style="padding: 48px 64px 32px;">${
+    link &&
+    `
     <a
       style="text-decoration: none; color: ${textColor};"
       href="${link}"
-    >
+    >`
+  }
       <p style="font: ${fontShorthand}; text-align: ${alignment}; margin: 0;">
         ${textContent}
-      </p>
-    </a>
+      </p>${
+        link &&
+        `
+    </a>`
+      }
   </td>
 </tr>
     `;

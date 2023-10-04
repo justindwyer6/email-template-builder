@@ -1,59 +1,72 @@
-import { HtmlModule, ImageModuleProperties } from '../types';
-import { flattenValues } from '../utils';
+import {
+  ImageModuleProperties,
+  HtmlModule,
+  ImageModuleMetadata,
+} from '../types';
 
 export class ImageModule implements HtmlModule<ImageModuleProperties> {
-  private static defaultProperties: ImageModuleProperties = {
-    name: 'Image',
+  private static initialProperties: ImageModuleProperties = {
+    link: '',
+    imageSrc: 'https://picsum.photos/640/400',
+    altText: '',
+    alignment: 'center',
+    verticalAlignment: 'top',
+    width: '640',
+  };
+
+  public metadata: ImageModuleMetadata = {
     link: {
-      value: '',
       label: 'Link',
       details: '',
       documentationUrl: '',
+      type: 'content',
     },
     imageSrc: {
-      value: 'https://picsum.photos/640/400',
       label: 'Image Source Link',
       details: '',
       documentationUrl: '',
+      type: 'content',
     },
     altText: {
-      value: '',
       label: 'Alt Text',
       details: '',
       documentationUrl: '',
+      type: 'content',
     },
     alignment: {
-      value: 'center',
       label: 'Alignment',
       details: '',
       documentationUrl: '',
+      type: 'style',
     },
-    verticalAlign: {
-      value: 'top',
+    verticalAlignment: {
       label: 'Vertical Alignment',
       details: '',
       documentationUrl: '',
+      type: 'style',
     },
     width: {
-      value: '640',
       label: 'Width',
       details: '',
       documentationUrl: '',
+      type: 'style',
     },
   };
 
   public data: ImageModuleProperties;
 
   constructor(data?: Partial<ImageModuleProperties>) {
-    this.data = { ...ImageModule.defaultProperties, ...data };
+    this.data = { ...ImageModule.initialProperties, ...data };
   }
+
+  public name: string = 'Image';
 
   template(
     imageModuleProperties: ImageModuleProperties,
     devMode: boolean
   ): string {
-    const { alignment, link, imageSrc, width, verticalAlign, altText } =
-      flattenValues(imageModuleProperties);
+    const { alignment, link, imageSrc, width, verticalAlignment, altText } =
+      imageModuleProperties;
 
     return `
 <tr>
@@ -65,7 +78,7 @@ export class ImageModule implements HtmlModule<ImageModuleProperties> {
       <img
         src="${imageSrc}"
         width="${width}"
-        style="vertical-align: ${verticalAlign}; max-width: ${width}px; width: 100%;"
+        style="vertical-align: ${verticalAlignment}; max-width: ${width}px; width: 100%;"
         alt="${altText}"
       />${
         devMode

@@ -1,34 +1,32 @@
 'use client';
-import React, { useState } from 'react';
-import { HtmlModule, isPropertyData } from '../types';
-import { cloneDeep } from 'lodash';
+import React, { useContext, useState } from 'react';
+import { HtmlModule, PropertyMetadata } from '../types';
 import ModuleInput from './ModuleInput';
 import { AnyModuleProperties } from '../types';
 import { Button } from '@mui/material';
+import { displayedInputTypesContext } from '../page';
+import { ImageModule } from '../modules/image';
 
 // TODO: Build a toggle for this
 const devMode = true;
 
 type EmailModuleProps = {
   module: HtmlModule<AnyModuleProperties>;
+  addNewModule: (newModule: HtmlModule) => void;
 };
 
 const EmailModule: React.FC<EmailModuleProps> = ({
-  module: { template, data },
+  module: { template, data, metadata, name },
+  addNewModule,
 }) => {
   const [moduleData, setModuleData] = useState<AnyModuleProperties>(data);
-
+  const displayedInputTypes = useContext(displayedInputTypesContext);
+  console.log(moduleData);
   const updateProperty = (
     propertyKey: keyof AnyModuleProperties,
     value: string
   ) => {
-    const newModuleData = cloneDeep(moduleData);
-    const newProperty = newModuleData[propertyKey];
-
-    if (typeof newProperty !== 'object') return;
-
-    newProperty.value = value;
-    setModuleData(newModuleData);
+    setModuleData({ ...moduleData, [propertyKey]: value });
   };
 
   return (
@@ -41,22 +39,21 @@ const EmailModule: React.FC<EmailModuleProps> = ({
           overflow: 'scroll',
         }}
       >
-        <h2>{moduleData.name}</h2>
+        <h2>{name}</h2>
         <div>
           {Object.keys(moduleData).map((key, i) => {
             const typedKey = key as keyof AnyModuleProperties;
-            const property = moduleData[typedKey];
+            const propertyValue = moduleData[typedKey];
+            const propertyMetadata: PropertyMetadata = metadata[typedKey];
 
-            if (typeof property === 'string') return;
-
-            if (!isPropertyData(property)) return;
+            if (!displayedInputTypes[propertyMetadata.type]) return;
 
             return (
               <ModuleInput
                 key={i}
                 propertyKey={typedKey}
-                value={property.value}
-                label={property.label}
+                value={propertyValue || ''}
+                label={propertyMetadata.label}
                 updateProperty={updateProperty}
               />
             );
@@ -69,6 +66,13 @@ const EmailModule: React.FC<EmailModuleProps> = ({
             }
           >
             Copy Module HTML
+          </Button>
+          <Button
+            onClick={() => {
+              addNewModule({ template, data: moduleData, metadata, name });
+            }}
+          >
+            Clone Module
           </Button>
         </div>
         <pre>{template(moduleData, false)}</pre>

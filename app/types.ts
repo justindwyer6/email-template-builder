@@ -1,14 +1,15 @@
 type Alignment = 'left' | 'center' | 'right';
 type VerticalAlignment = 'top' | 'middle' | 'bottom';
+export type inputType = 'content' | 'style' | 'rawHtml';
 
-export interface PropertyData<T = string> {
-  value: T;
+export interface PropertyMetadata {
   label: string;
   details: string;
   documentationUrl: string;
+  type: inputType;
 }
 
-export function isPropertyData<T>(obj: any): obj is PropertyData<T> {
+export function isPropertyMetadata<T>(obj: any): obj is PropertyMetadata {
   return (
     obj &&
     typeof obj.value !== 'undefined' &&
@@ -18,39 +19,49 @@ export function isPropertyData<T>(obj: any): obj is PropertyData<T> {
   );
 }
 
-export interface HtmlModuleProperties {
-  name: string;
-  alignment: PropertyData<Alignment>;
-  link: PropertyData<string>;
-  width: PropertyData<string>;
-  verticalAlign: PropertyData<VerticalAlignment>;
+export interface GenericModuleProperties {
+  alignment: Alignment;
+  link: string;
+  width: string;
+  verticalAlignment: VerticalAlignment;
 }
 
-export interface ImageModuleProperties extends HtmlModuleProperties {
-  imageSrc: PropertyData<string>;
-  altText: PropertyData<string>;
+export type GenericModuleMetadata = {
+  [K in keyof GenericModuleProperties]: PropertyMetadata;
+};
+
+export interface ImageModuleProperties extends GenericModuleProperties {
+  imageSrc: string;
+  altText: string;
 }
 
-export interface TextModuleProperties extends HtmlModuleProperties {
-  textContent: PropertyData<string>;
-  textColor: PropertyData<string>;
-  fontShorthand: PropertyData<string>;
+export type ImageModuleMetadata = {
+  [K in keyof ImageModuleProperties]: PropertyMetadata;
+};
+
+export interface TextModuleProperties extends GenericModuleProperties {
+  textContent: string;
+  textColor: string;
+  fontShorthand: string;
 }
 
-export type AnyModuleProperties = HtmlModuleProperties &
+export type TextModuleMetadata = {
+  [K in keyof TextModuleProperties]: PropertyMetadata;
+};
+
+export type AnyModuleProperties = GenericModuleProperties &
   Partial<
-    Omit<ImageModuleProperties, keyof HtmlModuleProperties> &
-      Omit<TextModuleProperties, keyof HtmlModuleProperties>
+    Omit<ImageModuleProperties, keyof GenericModuleProperties> &
+      Omit<TextModuleProperties, keyof GenericModuleProperties>
   >;
 
 export interface HtmlModule<T = AnyModuleProperties> {
-  template: (HtmlModuleProperties: T, devMode: boolean) => string;
+  template: (GenericModuleProperties: T, devMode: boolean) => string;
   data: T;
+  metadata: Record<string, PropertyMetadata>;
+  name: string;
 }
 
 export interface ModulesDictionary {
-  [key: string]: HtmlModule<any> & { data: HtmlModuleProperties };
+  [key: string]: HtmlModule<any> & { data: GenericModuleProperties };
 }
-
-//   aStyle: string;
-//   tdStyle: string;
